@@ -1,9 +1,11 @@
 #include <Wire.h>
 #include <Adafruit_PWMServoDriver.h>
 #include <SoftwareSerial.h>
- 
+#include <LiquidCrystal_I2C.h>
+
+LiquidCrystal_I2C lcd(0x27,16,2); // Display  I2C 16 x 2
 Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
-SoftwareSerial bt(2,3); // TX, RX
+SoftwareSerial bt(0,1); /* (Rx,Tx) */
 
 const int MIN_PULSE_WIDTH = 500;
 const int MAX_PULSE_WIDTH = 2500;
@@ -21,6 +23,17 @@ int pulseWidth(int angle) {
 void setup() {
     Serial.begin(9600);
     bt.begin(9600);
+
+    Wire.begin();
+  //initialize lcd screen
+  lcd.init();
+   // turn on the backlight
+  lcd.backlight();
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Dec: ");
+  lcd.setCursor(0, 1);
+  lcd.print("Bin:");
 
     pwm.begin();
     pwm.setPWMFreq(FREQUENCY);
